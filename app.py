@@ -2,12 +2,16 @@ from bson import ObjectId
 from flask import Flask, request, jsonify, make_response
 from flask_restful import Api, Resource
 from pymongo import MongoClient
+import ssl
+
 
 app = Flask(__name__)
 api = Api(app)
-client = MongoClient('mongodb://localhost')
+client = MongoClient('mongodb://bayyinadb:AJnQbeg5vuia0rpmnUWOzPdoT8qvyEcXiPkLVh91DTTazjayb9zT1Zr9IrBLSCWRCkvpPtWnPgx5ACDbQV4qOw==@bayyinadb.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@bayyinadb@')
+
 db = client.newsapiv
 collection = db['mypodcasts']
+
 class HelloWorld(Resource):
     def get(self):
         return {
@@ -105,6 +109,7 @@ class PodcastById(Resource):
             return make_response('', 204)
         else:
             return make_response(jsonify({'error': 'Podcast not found'}), 404)
+        
 
 api.add_resource(Podcast, '/podcasts')
 api.add_resource(PodcastById, '/podcasts/<string:id>')
@@ -113,4 +118,4 @@ api.add_resource(News,'/News')
 api.add_resource(NewsItem,'/NewsItem/<string:news_title>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0',port=5556)
